@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="getMovies" doc:id="4e9daf86-e848-416e-9828-24ed2da78a0c" >
+		<http:listener doc:name="GET /movies" doc:id="1cdf0e25-7d88-45dc-9906-fb5184720eba" config-ref="HTTP_Listener_config" path="/movies" allowedMethods="GET"/>
+		<db:select doc:name="Get all Movies" doc:id="237bd513-7679-4e44-b204-d8831e522622" config-ref="MYSQL_Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM Movies]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="to JSON payload" doc:id="a2abcfef-1530-4387-9de6-6f0d7c7d5f22" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="addMovie" doc:id="813617b5-c097-417f-a4bd-09793dbc3068" >
+		<http:listener doc:name="POST /movies" doc:id="bac0438e-bf05-4312-ae21-d14be3ed37d4" config-ref="HTTP_Listener_config" path="/movies" allowedMethods="POST" />
+		<db:insert doc:name="Insert Movie" doc:id="a66cbc30-6f3d-4007-8f3c-e054acb45ec1" config-ref="MYSQL_Database_Config">
+			<db:sql ><![CDATA[INSERT INTO Movies (movieId, movieName, genre, duration, language, format, price, timeSlot, availableSeats, totalSeats, releaseDate, book)
+VALUES (:movieId, :movieName, :genre, :duration, :language, :format, :price, :timeSlot, :availableSeats, :totalSeats, :releaseDate, :book);]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+"movieId" : payload.movieId,
+"movieName" : payload.movieName,
+"genre" : payload.genre,
+"duration" : payload.duration,
+"language" : payload.language,
+"format" : payload.format,
+"price" : payload.price,
+"timeSlot" : payload.timeSlot,
+"availableSeats" : payload.availableSeats,
+"totalSeats" : payload.totalSeats,
+"releaseDate" : payload.releaseDate,
+"book" : payload.book
+}]]]></db:input-parameters>
+		</db:insert>
+		<ee:transform doc:name="to JSON payload" doc:id="d1dba4f0-0109-4c58-ac01-72d190764ae4">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="updateAvailableSeats" doc:id="bef74a3b-a12a-4adf-abb7-2c6a8d10e218" >
+		<http:listener doc:name="PUT/movies" doc:id="5eac91e4-16c4-41d2-8f12-0d39e98b0bc8" config-ref="HTTP_Listener_config" path="/movies" allowedMethods="PUT" />
+		<db:update doc:name="Update availableSeats" doc:id="47c2657e-6566-4770-ad58-06a7f047df02" config-ref="MYSQL_Database_Config">
+			<db:sql ><![CDATA[UPDATE Movies
+SET availableSeats = :availableSeats
+WHERE movieId = :movieId;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"movieId" : payload.movieId,
+	"availableSeats" : payload.availableSeats
+}]]]></db:input-parameters>
+		</db:update>
+		<ee:transform doc:name="to JSON payload" doc:id="507f66ab-fac6-44f7-a570-ccb3292836bb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

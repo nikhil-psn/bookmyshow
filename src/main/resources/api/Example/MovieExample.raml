@@ -1,0 +1,55 @@
+#%RAML 1.0 NamedExample
+
+value:
+  -
+    movieId: 1
+    movieName: Dune
+    genre: [Action,Adventure,Drama,Sci-Fi]
+    duration: 2h35m
+    language: [English,Hindi]
+    format: [2D,4DX,IMAX 3D,4DX 3D,IMAX 2D,3D]
+    price: 150
+    timeSlot: Afernoon
+    availableSeats: 20
+    totalSeats: 150
+    releaseDate: 2021-10-22
+    book: http://localhost:8081/order?movie=Dune
+  -
+    movieId: 2
+    movieName: Venom Let There Be Carnage
+    genre: [Action,Horror,Sci-Fi,Thriller]
+    duration: 1h37m
+    language: [English,Hindi,Tamil,Telugu]
+    format: [2D,3D SCREEN X,MX4D,4DX 3D,IMAX 2D,3D,4DX,IMAX 3D,2D SCREEN X]
+    price: 150
+    timeSlot: Night
+    availableSeats: 100
+    totalSeats: 150
+    releaseDate: 2021-10-14
+    book: http://localhost:8081/order?movie=VenomLetThereBeChange
+  -
+    movieId: 3
+    movieName: Halloween Kills
+    genre: [Crime,Horror,Thriller]
+    duration: 1h46m
+    language: [English]
+    format: [2D]
+    price: 150
+    timeSlot: Evening
+    availableSeats: 0
+    totalSeats: 150
+    releaseDate: 2021-10-29
+    book: http://localhost:8081/order?movie=HalloweenKills
+  -
+    movieId: 4
+    movieName: Ron`s Gone Wrong
+    genre: [Animation,Comedy,Family]
+    duration: 1h47m
+    language: [English]
+    format: [2D,3D]
+    price: 150
+    timeSlot: Evening
+    availableSeats: 95
+    totalSeats: 150
+    releaseDate: 2021-10-29
+    book: http://localhost:8081/order?movie=RonsGoneWrong

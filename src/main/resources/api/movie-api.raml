@@ -1,0 +1,44 @@
+#%RAML 1.0
+title: Movie API
+
+types:
+  Movie: !include Type/MovieDataType.raml
+
+/movies:
+  get:
+    description: This method is to display all the movies according to location and user may also filter movies according to name and time-slot.
+    queryParameters:
+      location:
+        description: This parameter will be used to show list of movies according to the location specified by user. This is a mandatory parameter. Book My Show will not recommend movies unless location preferrence is provided by user.
+        required: true
+        enum:
+          - Mumbai
+          - NCR
+          - Bengaluru
+          - Hyderabad
+          - Ahmedabad
+          - Chandigarh
+          - Pune
+          - Kolkata
+          - Kochi
+          - Guwahati
+      search:
+        description: This parameter will be used to show movie details according to the name provided by user. This is not a mandatory parameter.
+        type: string
+        required: false
+      timeslot:
+        description: This parameter will be used to filter movies according to timeslot provided by user. This is not a mandatory parameter.
+        required: false
+        enum:
+          - Morning
+          - Afternoon
+          - Evening
+          - Night
+
+    responses:
+      200:
+        body:
+          application/json:
+            type: Movie[]
+            examples:
+              output: !include Example/MovieExample.raml
